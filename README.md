@@ -47,6 +47,45 @@ cd nutri-ledger-api
 
 The API will be available at `http://localhost:8080`
 
+### Environment Variables
+
+For Spring profiles (`local`/`prod`), the application currently expects:
+
+- `DB_URL`
+- `DB_USERNAME`
+- `DB_PASSWORD`
+
+For Docker infrastructure, `.env` also includes Redis variables:
+
+- `REDIS_HOST`
+- `REDIS_PORT`
+- `REDIS_PASSWORD`
+
+A template is available in `.env.example`.
+
+### Docker Infrastructure (PostgreSQL + Redis)
+
+```bash
+cp .env.example .env
+docker compose up -d postgres redis
+```
+
+To stop containers:
+
+```bash
+docker compose down
+```
+
+### Running with Profiles
+
+```bash
+# Local profile (PostgreSQL values from env)
+SPRING_PROFILES_ACTIVE=local ./mvnw spring-boot:run
+
+# Production profile (reads DB_* env vars)
+SPRING_PROFILES_ACTIVE=prod ./mvnw spring-boot:run
+```
+
 ## 📁 Project Structure
 
 ```
@@ -78,4 +117,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 📝 License
 
 This project is licensed under the terms specified in the project configuration.
-
