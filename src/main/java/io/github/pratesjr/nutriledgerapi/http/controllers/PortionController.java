@@ -6,6 +6,7 @@ import io.github.pratesjr.nutriledgerapi.application.ports.RegisterCaloriesByPor
 import io.github.pratesjr.nutriledgerapi.domain.models.Portion;
 import io.github.pratesjr.nutriledgerapi.http.dtos.PortionDto;
 import io.github.pratesjr.nutriledgerapi.http.dtos.PortionResponseDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +35,6 @@ public class PortionController {
 		Portion registeredPortion = registerCaloriesByPortionUseCase.process(portion);
 		PortionResponseDto response = portionResponseDtoMapper.toDto(registeredPortion);
 
-		return ResponseEntity.ok(response);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 }
