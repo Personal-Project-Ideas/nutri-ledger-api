@@ -1,8 +1,11 @@
 package io.github.pratesjr.nutriledgerapi.http.controllers;
 
 import io.github.pratesjr.nutriledgerapi.application.mappers.PortionModelMapper;
+import io.github.pratesjr.nutriledgerapi.application.mappers.PortionResponseDtoMapper;
+import io.github.pratesjr.nutriledgerapi.application.ports.RegisterCaloriesByPortionUseCase;
 import io.github.pratesjr.nutriledgerapi.domain.models.Portion;
 import io.github.pratesjr.nutriledgerapi.http.dtos.PortionDto;
+import io.github.pratesjr.nutriledgerapi.http.dtos.PortionResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,22 +17,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class PortionController {
 
 	private final PortionModelMapper portionModelMapper;
+	private final PortionResponseDtoMapper portionResponseDtoMapper;
+	private final RegisterCaloriesByPortionUseCase registerCaloriesByPortionUseCase;
 
-	public PortionController(PortionModelMapper portionModelMapper) {
+	public PortionController(PortionModelMapper portionModelMapper,
+			PortionResponseDtoMapper portionResponseDtoMapper,
+			RegisterCaloriesByPortionUseCase registerCaloriesByPortionUseCase) {
 		this.portionModelMapper = portionModelMapper;
+		this.portionResponseDtoMapper = portionResponseDtoMapper;
+		this.registerCaloriesByPortionUseCase = registerCaloriesByPortionUseCase;
 	}
 
 	@PostMapping
-	public ResponseEntity<PortionDto> createPortion(@RequestBody PortionDto portionDto) {
+	public ResponseEntity<PortionResponseDto> createPortion(@RequestBody PortionDto portionDto) {
 		Portion portion = portionModelMapper.toModel(portionDto);
-
-		// Temporary response until use case orchestration is implemented.
-		PortionDto response = new PortionDto();
-		response.setFoodName(portion.getFoodName());
-		response.setCaloriesPerPortion(portion.getCaloriesPerPortion());
-		response.setPortionGrams(portion.getPortionGrams());
-		response.setPortionQuantity(portion.getPortionQuantity());
-		response.setPortionMls(portion.getPortionMls());
+		Portion registeredPortion = registerCaloriesByPortionUseCase.process(portion);
+		PortionResponseDto response = portionResponseDtoMapper.toDto(registeredPortion);
 
 		return ResponseEntity.ok(response);
 	}
