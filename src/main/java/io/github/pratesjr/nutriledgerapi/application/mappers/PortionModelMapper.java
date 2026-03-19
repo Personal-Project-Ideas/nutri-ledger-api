@@ -14,11 +14,10 @@ public class PortionModelMapper implements ModelMapper<PortionDto, Portion> {
         }
 
         return new Portion(
-                dto.getFoodName(),
-                dto.getCaloriesPerPortion(),
-                dto.getPortionGrams(),
-                dto.getPortionQuantity(),
-                dto.getPortionMls()
+                dto.getName(),
+                dto.getServingQuantity(),
+                dto.getServingUnit(),
+                dto.getCaloriesPerServing()
         );
     }
 }

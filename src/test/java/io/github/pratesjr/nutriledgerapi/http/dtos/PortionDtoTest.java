@@ -22,11 +22,10 @@ class PortionDtoTest {
             PortionDto dto = new PortionDto();
 
             assertAll(
-                    () -> assertEquals("", dto.getFoodName()),
-                    () -> assertEquals(0, dto.getCaloriesPerPortion()),
-                    () -> assertNull(dto.getPortionGrams()),
-                    () -> assertNull(dto.getPortionQuantity()),
-                    () -> assertNull(dto.getPortionMls())
+                    () -> assertEquals("", dto.getName()),
+                    () -> assertNull(dto.getServingQuantity()),
+                    () -> assertNull(dto.getServingUnit()),
+                    () -> assertNull(dto.getCaloriesPerServing())
             );
         }
     }
@@ -39,28 +38,26 @@ class PortionDtoTest {
         @DisplayName("should support getters setters equals hashCode and toString")
         void shouldSupportGettersSettersEqualsHashCodeAndToString() {
             PortionDto first = new PortionDto();
-            first.setFoodName("Banana");
-            first.setCaloriesPerPortion(89);
-            first.setPortionGrams(100);
-            first.setPortionQuantity(1);
-            first.setPortionMls(null);
+            first.setName("Banana");
+            first.setServingQuantity(1);
+            first.setServingUnit("unit");
+            first.setCaloriesPerServing(89);
 
             PortionDto second = new PortionDto();
-            second.setFoodName("Banana");
-            second.setCaloriesPerPortion(89);
-            second.setPortionGrams(100);
-            second.setPortionQuantity(1);
-            second.setPortionMls(null);
+            second.setName("Banana");
+            second.setServingQuantity(1);
+            second.setServingUnit("unit");
+            second.setCaloriesPerServing(89);
 
             assertAll(
-                    () -> assertEquals("Banana", first.getFoodName()),
-                    () -> assertEquals(89, first.getCaloriesPerPortion()),
+                    () -> assertEquals("Banana", first.getName()),
+                    () -> assertEquals(89, first.getCaloriesPerServing()),
                     () -> assertEquals(first, second),
                     () -> assertEquals(first.hashCode(), second.hashCode()),
-                    () -> assertTrue(first.toString().contains("foodName=Banana"))
+                    () -> assertTrue(first.toString().contains("name=Banana"))
             );
 
-            second.setCaloriesPerPortion(90);
+            second.setCaloriesPerServing(90);
             assertNotEquals(first, second);
         }
     }

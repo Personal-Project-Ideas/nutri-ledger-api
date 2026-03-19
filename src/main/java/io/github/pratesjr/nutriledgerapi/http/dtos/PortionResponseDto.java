@@ -13,11 +13,11 @@ import java.util.UUID;
 public class PortionResponseDto {
 
     private UUID id;
-    private String foodName = "";
-    private Integer caloriesPerPortion = 0;
-    private Integer portionGrams;
-    private Integer portionQuantity;
-    private Integer portionMls;
+    private String name = "";
+    private String normalizedName = "";
+    private Integer servingQuantity;
+    private String servingUnit;
+    private Integer caloriesPerServing;
     private Instant createdAt;
     private Instant updatedAt;
 }

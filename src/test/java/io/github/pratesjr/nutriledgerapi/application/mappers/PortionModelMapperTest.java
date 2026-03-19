@@ -32,20 +32,19 @@ class PortionModelMapperTest {
         @DisplayName("should map all fields from dto to model")
         void shouldMapAllFieldsFromDtoToModel() {
             PortionDto dto = new PortionDto();
-            dto.setFoodName("Rice");
-            dto.setCaloriesPerPortion(130);
-            dto.setPortionGrams(100);
-            dto.setPortionQuantity(1);
-            dto.setPortionMls(null);
+            dto.setName("Arroz Integral");
+            dto.setServingQuantity(100);
+            dto.setServingUnit("g");
+            dto.setCaloriesPerServing(130);
 
             Portion mapped = mapper.toModel(dto);
 
             assertAll(
-                    () -> assertEquals("Rice", mapped.getFoodName()),
-                    () -> assertEquals(130, mapped.getCaloriesPerPortion()),
-                    () -> assertEquals(100, mapped.getPortionGrams()),
-                    () -> assertEquals(1, mapped.getPortionQuantity()),
-                    () -> assertNull(mapped.getPortionMls())
+                    () -> assertEquals("Arroz Integral", mapped.getName()),
+                    () -> assertEquals("arroz integral", mapped.getNormalizedName()),
+                    () -> assertEquals(100, mapped.getServingQuantity()),
+                    () -> assertEquals("g", mapped.getServingUnit()),
+                    () -> assertEquals(130, mapped.getCaloriesPerServing())
             );
         }
     }
@@ -58,22 +57,27 @@ class PortionModelMapperTest {
         @DisplayName("should map dto list using default interface method")
         void shouldMapDtoListToModelListUsingDefaultInterfaceMethod() {
             PortionDto first = new PortionDto();
-            first.setFoodName("Apple");
-            first.setCaloriesPerPortion(52);
+            first.setName("Maca");
+            first.setServingQuantity(1);
+            first.setServingUnit("unit");
+            first.setCaloriesPerServing(52);
 
             PortionDto second = new PortionDto();
-            second.setFoodName("Milk");
-            second.setCaloriesPerPortion(60);
-            second.setPortionMls(100);
+            second.setName("Leite Desnatado");
+            second.setServingQuantity(100);
+            second.setServingUnit("ml");
+            second.setCaloriesPerServing(60);
 
             List<Portion> mapped = mapper.toModelList(List.of(first, second));
 
             assertAll(
                     () -> assertEquals(2, mapped.size()),
-                    () -> assertEquals("Apple", mapped.getFirst().getFoodName()),
-                    () -> assertEquals(52, mapped.getFirst().getCaloriesPerPortion()),
-                    () -> assertEquals("Milk", mapped.get(1).getFoodName()),
-                    () -> assertEquals(100, mapped.get(1).getPortionMls())
+                    () -> assertEquals("Maca", mapped.getFirst().getName()),
+                    () -> assertEquals("maca", mapped.getFirst().getNormalizedName()),
+                    () -> assertEquals(52, mapped.getFirst().getCaloriesPerServing()),
+                    () -> assertEquals("Leite Desnatado", mapped.get(1).getName()),
+                    () -> assertEquals("leite desnatado", mapped.get(1).getNormalizedName()),
+                    () -> assertEquals("ml", mapped.get(1).getServingUnit())
             );
         }
     }

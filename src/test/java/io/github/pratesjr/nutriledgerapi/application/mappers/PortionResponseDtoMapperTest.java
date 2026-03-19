@@ -40,9 +40,8 @@ class PortionResponseDtoMapperTest {
                     id,
                     "Oatmeal",
                     120,
-                    40,
-                    1,
-                    null,
+                    "g",
+                    150,
                     createdAt,
                     updatedAt
             );
@@ -51,11 +50,11 @@ class PortionResponseDtoMapperTest {
 
             assertAll(
                     () -> assertEquals(id, dto.getId()),
-                    () -> assertEquals("Oatmeal", dto.getFoodName()),
-                    () -> assertEquals(120, dto.getCaloriesPerPortion()),
-                    () -> assertEquals(40, dto.getPortionGrams()),
-                    () -> assertEquals(1, dto.getPortionQuantity()),
-                    () -> assertNull(dto.getPortionMls()),
+                    () -> assertEquals("Oatmeal", dto.getName()),
+                    () -> assertEquals("oatmeal", dto.getNormalizedName()),
+                    () -> assertEquals(120, dto.getServingQuantity()),
+                    () -> assertEquals("g", dto.getServingUnit()),
+                    () -> assertEquals(150, dto.getCaloriesPerServing()),
                     () -> assertEquals(createdAt, dto.getCreatedAt()),
                     () -> assertEquals(updatedAt, dto.getUpdatedAt())
             );

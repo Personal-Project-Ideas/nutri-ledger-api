@@ -1,25 +1,25 @@
 package io.github.pratesjr.nutriledgerapi.http.dtos;
 
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 public class PortionDto {
-    @Nonnull
-    private String foodName = "";
+    @Nonnull @NotBlank
+    private String name;
 
-    @Nonnull
-    private Integer caloriesPerPortion = 0;
 
-    @Nullable
-    private Integer portionGrams;
+    @Positive @NotBlank
+    private Integer servingQuantity;
 
-    @Nullable
-    private Integer portionQuantity;
+    @Nonnull @NotBlank
+    private String servingUnit;
 
-    @Nullable
-    private Integer portionMls;
+    @Nonnull @Positive @NotBlank
+    private Integer caloriesPerServing;
 }

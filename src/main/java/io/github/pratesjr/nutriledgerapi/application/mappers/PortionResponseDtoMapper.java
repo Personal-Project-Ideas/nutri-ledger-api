@@ -15,11 +15,11 @@ public class PortionResponseDtoMapper implements DtoMapper<Portion, PortionRespo
 
         PortionResponseDto dto = new PortionResponseDto();
         dto.setId(model.getId());
-        dto.setFoodName(model.getFoodName());
-        dto.setCaloriesPerPortion(model.getCaloriesPerPortion());
-        dto.setPortionGrams(model.getPortionGrams());
-        dto.setPortionQuantity(model.getPortionQuantity());
-        dto.setPortionMls(model.getPortionMls());
+        dto.setName(model.getName());
+        dto.setNormalizedName(model.getNormalizedName());
+        dto.setServingQuantity(model.getServingQuantity());
+        dto.setServingUnit(model.getServingUnit());
+        dto.setCaloriesPerServing(model.getCaloriesPerServing());
         dto.setCreatedAt(model.getCreatedAt());
         dto.setUpdatedAt(model.getUpdatedAt());
         return dto;
