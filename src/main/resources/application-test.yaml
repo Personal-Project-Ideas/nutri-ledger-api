@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5434/nutri_ledger_pg
+    username: test_user
+    password: test_pass
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: test_pool
+      minimum-idle: 1
+      maximum-pool-size: 2
+      idle-timeout: 10000
+      max-lifetime: 30000
+      connection-timeout: 5000
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true

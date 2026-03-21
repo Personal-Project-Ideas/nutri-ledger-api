@@ -45,7 +45,21 @@ cd nutri-ledger-api
 ./mvnw spring-boot:run
 ```
 
-The API will be available at `http://localhost:8080`
+The API will be available at `http://localhost:8080/nutri-ledger/api`
+
+Global route prefix configured in `application.yaml`:
+
+```yaml
+server:
+  servlet:
+    context-path: /nutri-ledger/api
+```
+
+Quick health-check example:
+
+```bash
+curl http://localhost:8080/nutri-ledger/api/health
+```
 
 ### Environment Variables
 
