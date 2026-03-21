@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PortionDto {
     @Nonnull @NotBlank
-    private String name;
+    private String name = "";
 
 
     @Positive @NotBlank

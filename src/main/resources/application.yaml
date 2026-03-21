@@ -1,8 +1,14 @@
 spring:
   application:
-    name: nutri-ledger-api
+    name: ${APP_NAME}
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE}
+  config:
+    # Allows local runs to read variables directly from the project .env file.
+    import: optional:file:.env[.properties]
 
 server:
+  port: ${SERVER_PORT}
   servlet:
-    context-path: /nutri-ledger/api
+    context-path: ${SERVER_CONTEXT_PATH}
 
