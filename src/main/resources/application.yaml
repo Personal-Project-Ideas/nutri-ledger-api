@@ -6,8 +6,7 @@ spring:
   config:
     # Allows local runs to read variables directly from the project .env file.
     import: optional:file:.env[.properties]
-  web:
-    path: /nutri-ledger/api
+
 
 server:
   port: ${SERVER_PORT}

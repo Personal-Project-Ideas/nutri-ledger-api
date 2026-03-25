@@ -14,7 +14,6 @@ public class PortionResponseDto {
 
     private UUID id;
     private String name = "";
-    private String normalizedName = "";
     private Integer servingQuantity;
     private String servingUnit;
     private Integer caloriesPerServing;

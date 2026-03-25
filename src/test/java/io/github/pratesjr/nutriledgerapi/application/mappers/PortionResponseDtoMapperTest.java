@@ -51,7 +51,6 @@ class PortionResponseDtoMapperTest {
             assertAll(
                     () -> assertEquals(id, dto.getId()),
                     () -> assertEquals("Oatmeal", dto.getName()),
-                    () -> assertEquals("oatmeal", dto.getNormalizedName()),
                     () -> assertEquals(120, dto.getServingQuantity()),
                     () -> assertEquals("g", dto.getServingUnit()),
                     () -> assertEquals(150, dto.getCaloriesPerServing()),
