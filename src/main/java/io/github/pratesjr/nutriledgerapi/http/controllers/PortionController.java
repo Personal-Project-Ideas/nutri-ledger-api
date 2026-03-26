@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +54,7 @@ public class PortionController {
 			}
 	)
 	@PostMapping()
-	public ResponseEntity<PortionResponseDto> createPortion(@RequestBody PortionDto portionDto) {
+	public ResponseEntity<PortionResponseDto> createPortion(@Valid @RequestBody PortionDto portionDto) {
 		Portion portion = portionModelMapper.toModel(portionDto);
 		Portion registeredPortion = registerCaloriesByPortionUseCase.process(portion);
 		PortionResponseDto response = portionResponseDtoMapper.toDto(registeredPortion);

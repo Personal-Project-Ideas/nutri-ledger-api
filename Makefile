@@ -1,4 +1,4 @@
-.PHONY: run run-local test
+.PHONY: run run-local test cucumber-test
 
 run:
 	./mvnw spring-boot:run
@@ -9,3 +9,5 @@ run-local:
 test:
 	./mvnw test
 
+cucumber-test:
+	./mvnw -Dtest=io.github.pratesjr.nutriledgerapi.bdd.HealthCheckIT test
