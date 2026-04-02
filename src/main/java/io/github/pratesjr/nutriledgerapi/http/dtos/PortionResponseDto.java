@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -17,7 +16,6 @@ public class PortionResponseDto {
     private Integer servingQuantity;
     private String servingUnit;
     private Integer caloriesPerServing;
-    private Instant createdAt;
-    private Instant updatedAt;
+    private String createdAt;
+    private String updatedAt;
 }
-

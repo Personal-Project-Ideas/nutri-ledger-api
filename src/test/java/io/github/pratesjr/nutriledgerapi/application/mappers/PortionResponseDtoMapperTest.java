@@ -54,10 +54,9 @@ class PortionResponseDtoMapperTest {
                     () -> assertEquals(120, dto.getServingQuantity()),
                     () -> assertEquals("g", dto.getServingUnit()),
                     () -> assertEquals(150, dto.getCaloriesPerServing()),
-                    () -> assertEquals(createdAt, dto.getCreatedAt()),
-                    () -> assertEquals(updatedAt, dto.getUpdatedAt())
+                    () -> assertEquals(createdAt.toString(), dto.getCreatedAt()),
+                    () -> assertEquals(updatedAt.toString(), dto.getUpdatedAt())
             );
         }
     }
 }
-

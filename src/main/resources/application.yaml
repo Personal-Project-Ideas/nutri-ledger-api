@@ -6,7 +6,16 @@ spring:
   config:
     # Allows local runs to read variables directly from the project .env file.
     import: optional:file:.env[.properties]
-
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: off
+    properties:
+      hibernate:
+        format_sql: true
+        physical_naming_strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategySnakeCaseImpl
 
 server:
   port: ${SERVER_PORT}
