@@ -71,11 +71,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, Object>> handleRuntimeExceptions(RuntimeException ex, HttpServletRequest request) {
-        // Tenta mapear pelo code se for uma exception customizada
+
         String code = null;
         int httpStatus = 500;
         String description = ex.getMessage();
-        // Reflection para buscar campo CODE
+
         try {
             java.lang.reflect.Field codeField = ex.getClass().getDeclaredField("CODE");
             codeField.setAccessible(true);
@@ -91,7 +91,6 @@ public class GlobalExceptionHandler {
                 }
             }
         } catch (Exception ignore) {
-            // Não é uma exception customizada, usa defaults
         }
         if (code == null) {
             code = "http_500_001";

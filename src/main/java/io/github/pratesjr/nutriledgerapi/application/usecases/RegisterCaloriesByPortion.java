@@ -9,7 +9,6 @@ public class RegisterCaloriesByPortion implements RegisterCaloriesByPortionUseCa
 
     @Override
     public Portion process(Portion data) {
-        // Placeholder until persistence/orchestration is implemented.
         return data;
     }
 }

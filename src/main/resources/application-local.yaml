@@ -18,6 +18,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        physical_naming_strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategySnakeCaseImpl
+        physical_naming_strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
   jackson:
     property-naming-strategy: SNAKE_CASE

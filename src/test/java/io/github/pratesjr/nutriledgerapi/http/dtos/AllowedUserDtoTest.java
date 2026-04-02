@@ -5,8 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AllowedUserDtoTest {
     @Test
-    void testAllArgsConstructorAndGetters() {
-        AllowedUserDto dto = new AllowedUserDto("user@email.com");
+    void testGettersAndSetters() {
+        AllowedUserDto dto = new AllowedUserDto();
+        dto.setEmail("user@email.com");
         assertEquals("user@email.com", dto.getEmail());
     }
 

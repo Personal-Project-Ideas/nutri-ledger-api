@@ -4,5 +4,5 @@ import io.github.pratesjr.nutriledgerapi.domain.models.AllowedUser;
 import io.github.pratesjr.nutriledgerapi.domain.models.User;
 
 public interface CreateUserUseCase {
-    User createUser(AllowedUser user);
+    User process(AllowedUser user);
 }
