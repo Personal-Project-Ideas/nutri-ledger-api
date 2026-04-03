@@ -22,5 +22,6 @@ public class CreateUser  implements CreateUserUseCase {
 
         }
 
+        return null;
     }
 }
