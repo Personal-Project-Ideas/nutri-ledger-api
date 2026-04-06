@@ -37,3 +37,4 @@ spring:
             token-uri: ${GCLOUD_TOKEN_URI}
             user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
             user-name-attribute: sub
+

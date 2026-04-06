@@ -18,7 +18,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@ControllerAdvice
+import org.springframework.web.bind.annotation.RestController;
+
+@ControllerAdvice(annotations = RestController.class)
 public class GlobalExceptionHandler {
     private String getRequestId(HttpServletRequest request) {
         Object attr = request.getAttribute("requestId");
