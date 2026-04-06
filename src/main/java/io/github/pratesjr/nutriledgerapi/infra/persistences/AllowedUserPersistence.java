@@ -19,10 +19,7 @@ public class AllowedUserPersistence implements AllowedUserPersistencePort {
 
     @Override
     public AllowedUser findByEmail(String email) {
-        AllowedUserEntity entity = repository.findAll().stream()
-            .filter(e -> email.equals(e.getEmail()))
-            .findFirst()
-            .orElse(null);
+        AllowedUserEntity entity = repository.findByEmail(email).orElse(null);
         return entity != null ? mapper.toModel(entity) : null;
     }
 }

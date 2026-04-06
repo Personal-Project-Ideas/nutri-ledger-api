@@ -4,12 +4,14 @@ import io.github.pratesjr.nutriledgerapi.application.ports.AllowedUserPersistenc
 import io.github.pratesjr.nutriledgerapi.application.ports.AllowedUserPort;
 import io.github.pratesjr.nutriledgerapi.domain.errors.UserNotAllowedToBeCreatedException;
 import io.github.pratesjr.nutriledgerapi.domain.models.AllowedUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AllowedUserService implements AllowedUserPort {
     private final AllowedUserPersistencePort persistence;
 
+    @Autowired
     public AllowedUserService(AllowedUserPersistencePort persistence) {
         this.persistence = persistence;
     }

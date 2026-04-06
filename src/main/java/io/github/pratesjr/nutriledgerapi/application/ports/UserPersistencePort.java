@@ -5,5 +5,6 @@ import io.github.pratesjr.nutriledgerapi.domain.models.User;
 public interface UserPersistencePort {
     User create(User user);
     User findById(String id);
+    User findByEmail(String email);
 
 }

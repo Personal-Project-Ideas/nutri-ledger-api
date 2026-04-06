@@ -1,10 +1,10 @@
 package io.github.pratesjr.nutriledgerapi.utils;
 
 import io.github.pratesjr.nutriledgerapi.domain.errors.AuthTokenGenerationException;
+import io.github.pratesjr.nutriledgerapi.domain.models.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -21,14 +21,14 @@ public class JwtUtil {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
         this.expiration = expiration * 1000; // seconds to ms
     }
-    public String generateToken(OAuth2User oAuth2User) {
+    public String generateToken(User user) {
         try {
             long now = System.currentTimeMillis() / 1000L; // epoch seconds
             long exp = now + (expiration / 1000L);
             return Jwts.builder()
-                    .claim("sub", oAuth2User.getAttribute("sub") != null ? oAuth2User.getAttribute("sub") : oAuth2User.getName())
-                    .claim("email", oAuth2User.getAttribute("email"))
-                    .claim("name", oAuth2User.getAttribute("name"))
+                    .claim("sub", user.getId()) // or user.getUserId() if that's the method name
+                    .claim("email", user.getEmail())
+                    .claim("name", user.getFullName())
                     .claim("iat", now)
                     .claim("exp", exp)
                     .signWith(secretKey)

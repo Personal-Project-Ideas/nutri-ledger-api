@@ -44,4 +44,15 @@ public class UserPersistence  implements UserPersistencePort {
             throw new IllegalArgumentException();
         }
     }
+    
+    @Override
+    public User findByEmail(String email) {
+        Optional<UserEntity> userOpt = userRepository.findOne(
+            (root,
+             query,
+             cb
+            ) -> cb.equal(root.get("email"), email)
+        );
+        return userOpt.map(userEntityMapper::toModel).orElse(null);
+    }
 }
