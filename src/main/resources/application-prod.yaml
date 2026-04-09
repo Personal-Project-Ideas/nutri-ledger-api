@@ -18,3 +18,22 @@ spring:
     properties:
       hibernate:
         format_sql: ${JPA_FORMAT_SQL_PROD}
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GCLOUD_CLIENT_ID}
+            client-secret: ${GCLOUD_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+        provider:
+          google:
+            authorization-uri: ${GCLOUD_AUTH_URI}
+            token-uri: ${GCLOUD_TOKEN_URI}
+            user-info-uri: ${GCLOUD_USER_INFO_URI}
+            user-name-attribute: ${GCLOUD_USER_NAME_ATTRIBUTE}
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}

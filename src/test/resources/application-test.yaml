@@ -11,3 +11,6 @@ spring:
     properties:
       hibernate:
         dialect: ${TEST_HIBERNATE_DIALECT}
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}

@@ -6,9 +6,38 @@ spring:
   config:
     # Allows local runs to read variables directly from the project .env file.
     import: optional:file:.env[.properties]
-
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: off
+    properties:
+      hibernate:
+        format_sql: true
+        physical_naming_strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GCLOUD_CLIENT_ID}
+            client-secret: ${GCLOUD_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+        provider:
+          google:
+            authorization-uri: ${GCLOUD_AUTH_URI}
+            token-uri: ${GCLOUD_TOKEN_URI}
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+            user-name-attribute: sub
 
 server:
   port: ${SERVER_PORT}
   servlet:
     context-path: ${SERVER_CONTEXT_PATH}
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}

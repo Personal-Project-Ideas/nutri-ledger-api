@@ -10,8 +10,11 @@ public final class ErrorCodes {
         put("http_400_001", new ErrorCode("http_400_001", 400, "Validation failed for one or more fields"));
         put("http_400_002", new ErrorCode("http_400_002", 400, "Malformed request body or parameters"));
         put("http_401_001", new ErrorCode("http_401_001", 401, "Authentication is required or has failed"));
+        put("http_401_002", new ErrorCode("http_401_002", 401, "Failed to generate authentication token"));
         put("http_403_001", new ErrorCode("http_403_001", 403, "You do not have permission to access this resource"));
+        put("http_403_002", new ErrorCode("http_403_002", 403, "User is not allowed to be registered"));
         put("http_404_001", new ErrorCode("http_404_001", 404, "Resource not found"));
+        put("http_404_002", new ErrorCode("http_404_002", 404, "User not found in the database"));
         put("http_409_001", new ErrorCode("http_409_001", 409, "Resource conflict or already exists"));
         put("http_422_001", new ErrorCode("http_422_001", 422, "Request could not be processed"));
         put("http_500_001", new ErrorCode("http_500_001", 500, "An unexpected internal error occurred"));
