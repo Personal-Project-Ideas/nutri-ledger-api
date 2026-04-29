@@ -1,8 +1,9 @@
 package io.github.pratesjr.nutriledgerapi.application.ports;
 
+import io.github.pratesjr.nutriledgerapi.application.dtos.OAuthUserDto;
 import io.github.pratesjr.nutriledgerapi.domain.models.AllowedUser;
 import io.github.pratesjr.nutriledgerapi.domain.models.User;
 
-public interface CreateUserUseCase {
-    User process(AllowedUser user);
+public interface CreateUserUseCasePort {
+    User process(AllowedUser userEmail, OAuthUserDto oAuthInfo);
 }

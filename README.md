@@ -1,133 +1,116 @@
 # Nutri Ledger API
 
-A RESTful API for tracking daily food intake and calorie consumption. This application helps users maintain a food diary by logging meals and monitoring their daily caloric intake.
+Simple backend API for nutrition tracking, with Google login and JWT-based session cookie.
 
-## 📋 About
+## What This Project Is
 
-Nutri Ledger API is a backend service that provides comprehensive functionality for managing daily food diaries. Users can track their meals, calculate calorie consumption, and monitor their nutritional intake over time. The application is built with a clean architecture approach, ensuring maintainability and scalability.
+This project is in an early stage.  
+Current focus is building a clean base architecture, authentication flow, and core endpoints.
 
-## 🛠️ Tech Stack
+## Main Technologies
 
-### Core Framework
-- **Java 21** - Latest LTS version with modern language features
-- **Spring Boot 4.0.3** - Application framework and dependency injection
-- **Maven** - Dependency management and build tool
+- Java 21
+- Spring Boot 3.3
+- Spring Web (REST APIs)
+- Spring Data JPA
+- Spring Security + OAuth2 (Google)
+- JWT (`jjwt`)
+- PostgreSQL (local/prod), H2 (tests)
+- MapStruct
+- Lombok
+- Maven
+- OpenAPI / Swagger UI
 
-### Main Dependencies
-- **Spring Web MVC** - RESTful API development
-- **Spring Data JPA** - Database access and ORM
-- **Lombok** - Reduces boilerplate code with annotations
-- **Spring Boot DevTools** - Hot reload and development utilities
+## Architecture (Simple View)
 
-### Architecture
-The project follows a layered architecture pattern:
-- **Domain Layer** - Core business logic and entities
-- **Application Layer** - Use cases and business orchestration
-- **Infrastructure Layer** - Database, repositories, and external integrations
-- **Entrypoint Layer** - REST controllers and API endpoints
+The code follows a ports-and-adapters style:
 
-## 🚀 Getting Started
+- `domain`: business models and domain errors
+- `application`: use cases, ports (interfaces), mappers
+- `infra`: persistence adapters, repositories, security/config implementations
+- `http`: controllers and DTOs
+
+Why this is useful:
+
+- business rules stay isolated from framework details
+- easier testing and refactoring
+- clearer responsibility per layer
+
+## Project Structure
+
+```text
+src/main/java/io/github/pratesjr/nutriledgerapi
+├── application
+│   ├── models
+│   ├── ports
+│   ├── usecases
+│   └── mappers
+├── domain
+│   ├── models
+│   └── errors
+├── infra
+│   ├── config
+│   ├── entities
+│   ├── persistences
+│   ├── repositories
+│   ├── security
+│   └── services
+└── http
+    ├── controllers
+    └── dtos
+```
+
+## Running Locally
 
 ### Prerequisites
-- Java 21 or higher
-- Maven 3.6+
 
-### Running the Application
+- Java 21+
+- Maven 3.9+
+- PostgreSQL
 
-```bash
-# Clone the repository
-git clone <repository-url>
+### 1) Set environment variables
 
-# Navigate to the project directory
-cd nutri-ledger-api
+At minimum, define values used by `application.yaml` / profile files:
 
-# Run the application
-./mvnw spring-boot:run
-```
+- `APP_NAME`
+- `SPRING_PROFILES_ACTIVE` (`local`, `test`, or `prod`)
+- `SERVER_PORT`
+- `SERVER_CONTEXT_PATH`
+- `JWT_SECRET`
+- `JWT_EXPIRATION`
+- `GCLOUD_CLIENT_ID`
+- `GCLOUD_CLIENT_SECRET`
+- `GCLOUD_AUTH_URI`
+- `GCLOUD_TOKEN_URI`
+- `GOOGLE_PEOPLE_API_URL`
+- `POSTGRES_HOST`
+- `POSTGRES_PORT`
+- `POSTGRES_DB`
+- `POSTGRES_USER`
+- `POSTGRES_PASSWORD`
 
-The API will be available at `http://localhost:8080/nutri-ledger/api`
-
-Global route prefix configured in `application.yaml`:
-
-```yaml
-server:
-  servlet:
-    context-path: /nutri-ledger/api
-```
-
-Quick health-check example:
-
-```bash
-curl http://localhost:8080/nutri-ledger/api/health
-```
-
-### Environment Variables
-
-For Spring profiles (`local`/`prod`), the application currently expects:
-
-- `DB_URL`
-- `DB_USERNAME`
-- `DB_PASSWORD`
-
-For Docker infrastructure, `.env` also includes Redis variables:
-
-- `REDIS_HOST`
-- `REDIS_PORT`
-- `REDIS_PASSWORD`
-
-A template is available in `.env.example`.
-
-### Docker Infrastructure (PostgreSQL + Redis)
+### 2) Run the API
 
 ```bash
-cp .env.example .env
-docker compose up -d postgres redis
+mvn spring-boot:run
 ```
 
-To stop containers:
+## Tests
+
+Run tests with:
 
 ```bash
-docker compose down
+mvn test
 ```
 
-### Running with Profiles
+## API Docs
 
-```bash
-# Local profile (PostgreSQL values from env)
-SPRING_PROFILES_ACTIVE=local ./mvnw spring-boot:run
+When running locally, Swagger is available at:
 
-# Production profile (reads DB_* env vars)
-SPRING_PROFILES_ACTIVE=prod ./mvnw spring-boot:run
-```
+- `/swagger-ui.html` (or `/swagger-ui/index.html`)
 
-## 📁 Project Structure
+## Current Status
 
-```
-src/main/java/io/github/pratesjr/nutriledgerapi/
-├── application/         # Application layer
-│   └── usecases/       # Business use cases
-├── domain/             # Domain models and business logic
-├── entrypoint/         # REST controllers and API endpoints
-└── infra/              # Infrastructure layer
-    ├── config/         # Configuration classes
-    ├── database/       # Database configurations
-    ├── entities/       # JPA entities
-    ├── persistence/    # Persistence adapters
-    └── repositories/   # Spring Data repositories
-```
-
-## 🔧 Configuration
-
-Application configuration can be found in `src/main/resources/application.yaml`
-
-## 📚 API Documentation
-
-(Coming soon - API documentation will be added)
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📝 License
-
-This project is licensed under the terms specified in the project configuration.
+- Core structure is ready
+- Authentication flow is being implemented
+- Business features are still being expanded

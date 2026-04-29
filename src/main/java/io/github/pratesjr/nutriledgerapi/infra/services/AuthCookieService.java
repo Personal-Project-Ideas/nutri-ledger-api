@@ -1,6 +1,6 @@
 package io.github.pratesjr.nutriledgerapi.infra.services;
 
-import io.github.pratesjr.nutriledgerapi.infra.services.AuthCookieServicePort;
+import io.github.pratesjr.nutriledgerapi.application.ports.AuthCookieServicePort;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;

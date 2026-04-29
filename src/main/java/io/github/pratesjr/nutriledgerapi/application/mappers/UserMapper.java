@@ -12,6 +12,7 @@ public interface UserMapper {
         return new User(
             dto.getId(),
             dto.getFullName(),
+            null,
             dto.getAge(),
             dto.getCreatedAt() != null ? java.time.Instant.parse(dto.getCreatedAt()) : null,
             dto.getUpdatedAt() != null ? java.time.Instant.parse(dto.getUpdatedAt()) : null
