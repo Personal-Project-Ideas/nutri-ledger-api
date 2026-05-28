@@ -1,5 +1,7 @@
 package io.github.pratesjr.nutriledgerapi.utils;
 
+import java.util.UUID;
+
 import javax.crypto.SecretKey;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,9 +22,10 @@ class JwtUtilTest {
         SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes());
         long now = System.currentTimeMillis() / 1000L;
         long exp = now + 3600L;
+        UUID userId = UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
 
         String token = Jwts.builder()
-                .subject("123")
+                .subject(userId.toString())
                 .claim("email", "user@example.com")
                 .claim("iat", now)
                 .claim("exp", exp)
@@ -31,7 +34,7 @@ class JwtUtilTest {
 
         JwtUtil.JwtClaims claims = jwtUtil.parseAndValidate(token);
 
-        assertEquals(123L, claims.getUserId());
+        assertEquals(userId, claims.getUserId());
         assertEquals("user@example.com", claims.getEmail());
         assertTrue(claims.getExp() > now);
     }
@@ -43,9 +46,10 @@ class JwtUtilTest {
         SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes());
         long now = System.currentTimeMillis() / 1000L;
         long exp = now - 3600L;
-        
+        UUID userId = UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
+
         String token = Jwts.builder()
-                .subject("123")
+                .subject(userId.toString())
                 .claim("email", "user@example.com")
                 .claim("iat", now)
                 .claim("exp", exp)

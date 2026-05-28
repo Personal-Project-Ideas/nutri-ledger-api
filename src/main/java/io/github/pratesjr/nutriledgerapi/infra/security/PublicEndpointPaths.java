@@ -1,0 +1,44 @@
+package io.github.pratesjr.nutriledgerapi.infra.security;
+
+import java.util.Objects;
+
+import org.springframework.util.AntPathMatcher;
+
+/**
+ * Single allowlist for anonymous access: OAuth handshake, app auth routes, health, OpenAPI/Swagger.
+ * Everything else requires authentication ({@code anyRequest().authenticated()}).
+ */
+public final class PublicEndpointPaths {
+
+    private PublicEndpointPaths() {}
+
+    /** Ant-style patterns for {@code authorizeHttpRequests(...).requestMatchers(...).permitAll()}. */
+    public static final String[] PERMIT_ALL_PATTERNS = {
+            "/oauth2/**",
+            "/login/oauth2/**",
+            "/auth/google/signin",
+            "/auth/google/signup",
+            "/auth/signout",
+            "/health/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+    };
+
+    private static final AntPathMatcher MATCHER = new AntPathMatcher();
+
+    /**
+     * Path without servlet context path (aligned with {@link JwtCookieAuthenticationFilter}).
+     */
+    public static boolean isPublicPath(String pathWithinApplication) {
+        final String path = (pathWithinApplication == null || pathWithinApplication.isEmpty())
+                ? "/"
+                : pathWithinApplication;
+        for (String pattern : PERMIT_ALL_PATTERNS) {
+            if (MATCHER.match(Objects.requireNonNull(pattern), path)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}

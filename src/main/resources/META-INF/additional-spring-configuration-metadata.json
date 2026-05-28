@@ -1,0 +1,34 @@
+{
+  "properties": [
+    {
+      "name": "app.oauth2.login-success-redirect",
+      "type": "java.lang.String",
+      "description": "Frontend URL to redirect the browser to after OAuth login success."
+    },
+    {
+      "name": "app.oauth2.login-failure-redirect",
+      "type": "java.lang.String",
+      "description": "Frontend URL to redirect the browser to after OAuth login failure."
+    },
+    {
+      "name": "app.auth.cookie.secure",
+      "type": "java.lang.Boolean",
+      "description": "Whether AUTH_TOKEN cookie should include the Secure attribute."
+    },
+    {
+      "name": "app.cors.allowed-origins",
+      "type": "java.lang.String",
+      "description": "Comma-separated list of allowed CORS origins for credentialed browser requests."
+    },
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "description": "Secret key used to sign JWT tokens."
+    },
+    {
+      "name": "jwt.expiration",
+      "type": "java.lang.Long",
+      "description": "JWT expiration time in seconds."
+    }
+  ]
+}

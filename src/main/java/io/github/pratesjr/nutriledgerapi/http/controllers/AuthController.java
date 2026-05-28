@@ -1,27 +1,28 @@
 package io.github.pratesjr.nutriledgerapi.http.controllers;
 
-import io.github.pratesjr.nutriledgerapi.application.ports.CreateUserUseCasePort;
-import io.github.pratesjr.nutriledgerapi.application.ports.AuthUserUseCasePort;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import io.github.pratesjr.nutriledgerapi.application.dtos.OAuthUserDto;
-import io.github.pratesjr.nutriledgerapi.application.ports.AuthCookieServicePort;
 import io.github.pratesjr.nutriledgerapi.application.mappers.ResponseMapper;
+import io.github.pratesjr.nutriledgerapi.application.ports.AuthCookieServicePort;
+import io.github.pratesjr.nutriledgerapi.application.ports.AuthUserUseCasePort;
+import io.github.pratesjr.nutriledgerapi.application.ports.CreateUserUseCasePort;
 import io.github.pratesjr.nutriledgerapi.domain.models.AllowedUser;
 import io.github.pratesjr.nutriledgerapi.domain.models.User;
 import io.github.pratesjr.nutriledgerapi.http.dtos.UserResponseDto;
+import io.github.pratesjr.nutriledgerapi.infra.security.GoogleOAuthPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import io.github.pratesjr.nutriledgerapi.infra.security.GoogleOAuthPrincipal;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Tag(name = "Authentication", description = "Endpoints for user authentication and registration")
@@ -69,7 +70,7 @@ public class AuthController {
         }
     )
     @PostMapping("google/signin")
-    ResponseEntity<Void> signIn(
+    public ResponseEntity<Void> signIn(
             @AuthenticationPrincipal GoogleOAuthPrincipal principal,
             HttpServletResponse response
     ){
@@ -122,5 +123,13 @@ public class AuthController {
         UserResponseDto userResponse = responseMapper.toUserResponseDto(user);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
+    }
+    
+    @PostMapping("signout")
+    public ResponseEntity<Void> signOut(
+            HttpServletResponse response
+    ) {
+        this.authCookieService.removeAuthCookie(response);
+        return ResponseEntity.noContent().build();
     }
 }

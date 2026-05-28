@@ -4,4 +4,5 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public interface AuthCookieServicePort {
     void addAuthCookie(HttpServletResponse response, String token);
+    void removeAuthCookie(HttpServletResponse response);
 }

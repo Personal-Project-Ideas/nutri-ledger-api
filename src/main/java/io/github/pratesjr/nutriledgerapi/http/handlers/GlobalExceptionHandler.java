@@ -1,16 +1,4 @@
-package io.github.pratesjr.nutriledgerapi.http.controllers;
-
-import io.github.pratesjr.nutriledgerapi.domain.errors.UserConflictException;
-import io.github.pratesjr.nutriledgerapi.domain.errors.ErrorCodes;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatusCode;
+package io.github.pratesjr.nutriledgerapi.http.handlers;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,28 +6,52 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
+import io.github.pratesjr.nutriledgerapi.domain.errors.ErrorCodes;
+import io.github.pratesjr.nutriledgerapi.domain.errors.UserConflictException;
+import io.github.pratesjr.nutriledgerapi.infra.config.RequestIdFilter;
+import jakarta.servlet.http.HttpServletRequest;
 
 @ControllerAdvice(annotations = RestController.class)
 public class GlobalExceptionHandler {
+
     private String getRequestId(HttpServletRequest request) {
-        Object attr = request.getAttribute("requestId");
+        Object attr = request.getAttribute(RequestIdFilter.REQUEST_ID_ATTR);
         return attr != null ? attr.toString() : UUID.randomUUID().toString();
     }
 
-    private Map<String, Object> buildErrorBody(HttpServletRequest request, String code, int status, String message, List<Map<String, String>> details) {
+    private Map<String, Object> buildErrorBody(
+            HttpServletRequest request,
+            String code,
+            int status,
+            String message,
+            List<Map<String, String>> details
+    ) {
         Map<String, Object> body = new HashMap<>();
         body.put("requestid", getRequestId(request));
         body.put("code", code);
         body.put("status", status);
         body.put("message", message);
-        if (details != null) body.put("details", details);
+        if (details != null) {
+            body.put("details", details);
+        }
         return body;
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> handleValidationExceptions(
+            MethodArgumentNotValidException ex,
+            HttpServletRequest request
+    ) {
         List<Map<String, String>> details = ex.getBindingResult().getFieldErrors().stream()
                 .map(error -> {
                     Map<String, String> err = new HashMap<>();
@@ -48,13 +60,28 @@ public class GlobalExceptionHandler {
                     return err;
                 })
                 .collect(Collectors.toList());
-        Map<String, Object> body = buildErrorBody(request, "VALIDATION_ERROR", HttpStatus.BAD_REQUEST.value(), "Validation failed", details);
+        Map<String, Object> body = buildErrorBody(
+                request,
+                "VALIDATION_ERROR",
+                HttpStatus.BAD_REQUEST.value(),
+                "Validation failed",
+                details
+        );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<Map<String, Object>> handleResponseStatusException(ResponseStatusException ex, HttpServletRequest request) {
-        Map<String, Object> body = buildErrorBody(request, ex.getReason() != null ? ex.getReason() : "RESPONSE_STATUS_ERROR", ex.getStatusCode().value(), ex.getMessage(), null);
+    public ResponseEntity<Map<String, Object>> handleResponseStatusException(
+            ResponseStatusException ex,
+            HttpServletRequest request
+    ) {
+        Map<String, Object> body = buildErrorBody(
+                request,
+                ex.getReason() != null ? ex.getReason() : "RESPONSE_STATUS_ERROR",
+                ex.getStatusCode().value(),
+                ex.getMessage(),
+                null
+        );
         return ResponseEntity.status(ex.getStatusCode()).body(body);
     }
 
@@ -62,18 +89,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleUserConflict(UserConflictException ex, HttpServletRequest request) {
         ErrorCodes.ErrorCode codeObj = ErrorCodes.CODES.get(UserConflictException.CODE);
         Map<String, Object> body = buildErrorBody(
-            request,
-            codeObj.code,
-            codeObj.httpStatus,
-            ex.getMessage(),
-            null
+                request,
+                codeObj.code,
+                codeObj.httpStatus,
+                ex.getMessage(),
+                null
         );
         return ResponseEntity.status(codeObj.httpStatus).body(body);
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, Object>> handleRuntimeExceptions(RuntimeException ex, HttpServletRequest request) {
-
         String code = null;
         int httpStatus = 500;
         String description = ex.getMessage();
@@ -93,6 +119,7 @@ public class GlobalExceptionHandler {
                 }
             }
         } catch (Exception ignore) {
+            // no CODE field on this exception type
         }
         if (code == null) {
             code = "http_500_001";
@@ -103,7 +130,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleAllExceptions(Exception ex, HttpServletRequest request) {
-        Map<String, Object> body = buildErrorBody(request, "INTERNAL_ERROR", HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage(), null);
+        Map<String, Object> body = buildErrorBody(
+                request,
+                "INTERNAL_ERROR",
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                ex.getMessage(),
+                null
+        );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
 }
