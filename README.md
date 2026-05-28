@@ -97,11 +97,15 @@ mvn spring-boot:run
 
 ## Tests
 
-Run tests with:
+Tests use the `test` profile with in-memory H2 (tables created from JPA entities via `ddl-auto: create-drop`). Copy `.env.example` to `.env` and set `TEST_DB_*`, JWT, OAuth, and related variables—tests read configuration from `.env`, not committed property files.
 
 ```bash
-mvn test
+make test
+# or a single class:
+make test TEST_CLASS=JwtUtilTest
 ```
+
+Requires a `.env` with `TEST_DB_*`, JWT, OAuth, and related variables (see `.env.example`). `make test` forces the `test` profile so H2 settings from `.env` are used instead of local Postgres.
 
 ## API Docs
 

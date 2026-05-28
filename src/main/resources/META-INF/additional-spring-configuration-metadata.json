@@ -29,6 +29,11 @@
       "name": "jwt.expiration",
       "type": "java.lang.Long",
       "description": "JWT expiration time in seconds."
+    },
+    {
+      "name": "spring.jpa.hibernate.ddl-auto",
+      "type": "java.lang.String",
+      "description": "Hibernate DDL strategy (create-drop used in test profile with H2)."
     }
   ]
 }

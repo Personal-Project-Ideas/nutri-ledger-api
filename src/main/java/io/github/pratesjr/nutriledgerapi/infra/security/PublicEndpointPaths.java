@@ -6,11 +6,17 @@ import org.springframework.util.AntPathMatcher;
 
 /**
  * Single allowlist for anonymous access: OAuth handshake, app auth routes, health, OpenAPI/Swagger.
- * Everything else requires authentication ({@code anyRequest().authenticated()}).
+ * Business APIs (e.g. portions) require authentication — see {@link #AUTHENTICATED_PATTERNS}.
  */
 public final class PublicEndpointPaths {
 
     private PublicEndpointPaths() {}
+
+    /** Ant-style patterns that always require a valid session/JWT ({@code authenticated()}). */
+    public static final String[] AUTHENTICATED_PATTERNS = {
+            "/portions",
+            "/portions/**",
+    };
 
     /** Ant-style patterns for {@code authorizeHttpRequests(...).requestMatchers(...).permitAll()}. */
     public static final String[] PERMIT_ALL_PATTERNS = {

@@ -1,46 +1,21 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
   datasource:
-    url: jdbc:postgresql://localhost:5434/nutri_ledger_pg
-    username: test_user
-    password: test_pass
-    driver-class-name: org.postgresql.Driver
-    hikari:
-      pool-name: test_pool
-      minimum-idle: 1
-      maximum-pool-size: 2
-      idle-timeout: 10000
-      max-lifetime: 30000
-      connection-timeout: 5000
+    url: ${TEST_DB_URL}
+    username: ${TEST_DB_USERNAME}
+    password: ${TEST_DB_PASSWORD}
+    driver-class-name: org.h2.Driver
+  cache:
+    type: ${TEST_CACHE_TYPE:none}
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     show-sql: false
+    defer-datasource-initialization: true
     properties:
       hibernate:
         '[format_sql]': true
         '[physical_naming_strategy]': org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
-  jackson:
-    property-naming-strategy: SNAKE_CASE
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${GCLOUD_CLIENT_ID}
-            client-secret: ${GCLOUD_CLIENT_SECRET}
-            scope:
-              - email
-              - profile
-        provider:
-          google:
-            authorization-uri: ${GCLOUD_AUTH_URI}
-            token-uri: ${GCLOUD_TOKEN_URI}
-            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
-            user-name-attribute: sub
-
-app:
-  auth:
-    cookie:
-      secure: ${APP_AUTH_COOKIE_SECURE}
-  cors:
-    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS}
+        '[default_schema]': nutri_ledger
+        '[hbm2ddl.create_namespaces]': true

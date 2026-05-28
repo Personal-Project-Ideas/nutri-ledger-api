@@ -17,5 +17,6 @@ class PublicEndpointPathsTest {
     @Test
     void shouldTreatProtectedBusinessRoutesAsNonPublic() {
         assertFalse(PublicEndpointPaths.isPublicPath("/portions"));
+        assertFalse(PublicEndpointPaths.isPublicPath("/portions/1"));
     }
 }
