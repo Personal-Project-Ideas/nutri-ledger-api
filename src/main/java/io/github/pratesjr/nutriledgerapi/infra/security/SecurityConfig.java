@@ -18,6 +18,9 @@ public class SecurityConfig {
     private OAuth2LoginSuccessHandler oauth2LoginSuccessHandler;
 
     @Autowired
+    private OAuth2LoginFailureHandler oauth2LoginFailureHandler;
+
+    @Autowired
     private JwtCookieAuthenticationFilter jwtCookieAuthenticationFilter;
 
     @Bean
@@ -36,6 +39,7 @@ public class SecurityConfig {
             )
             .oauth2Login(oauth2 -> oauth2
                 .successHandler(oauth2LoginSuccessHandler)
+                .failureHandler(oauth2LoginFailureHandler)
                 .userInfoEndpoint(userInfo -> userInfo
                     .userService(customOAuth2UserService)
                 )

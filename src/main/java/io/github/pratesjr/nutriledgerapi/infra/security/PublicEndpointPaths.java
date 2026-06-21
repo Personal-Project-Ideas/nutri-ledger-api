@@ -23,7 +23,6 @@ public final class PublicEndpointPaths {
             "/oauth2/**",
             "/login/oauth2/**",
             "/auth/google/signin",
-            "/auth/google/signup",
             "/auth/signout",
             "/health/**",
             "/v3/api-docs/**",

@@ -18,7 +18,7 @@ class AuthCookieServiceTest {
 
     @Test
     void shouldAddAuthCookieWithExpectedAttributes() {
-        AuthCookieService service = new AuthCookieService(true);
+        AuthCookieService service = new AuthCookieService(true, true);
         HttpServletResponse response = mock(HttpServletResponse.class);
         String token = "jwt-token-example";
 
@@ -37,7 +37,7 @@ class AuthCookieServiceTest {
 
     @Test
     void shouldWriteSingleCanonicalSetCookieHeader() {
-        AuthCookieService service = new AuthCookieService(true);
+        AuthCookieService service = new AuthCookieService(true, true);
         HttpServletResponse response = mock(HttpServletResponse.class);
 
         service.addAuthCookie(response, "token");
@@ -48,7 +48,7 @@ class AuthCookieServiceTest {
 
     @Test
     void shouldOmitSecureAttributeWhenCookieSecureIsFalse() {
-        AuthCookieService service = new AuthCookieService(false);
+        AuthCookieService service = new AuthCookieService(false, true);
         HttpServletResponse response = mock(HttpServletResponse.class);
 
         service.addAuthCookie(response, "token");
@@ -59,7 +59,7 @@ class AuthCookieServiceTest {
 
     @Test
     void shouldClearAuthCookieOnLogoutWithMaxAgeZero() {
-        AuthCookieService service = new AuthCookieService(true);
+        AuthCookieService service = new AuthCookieService(true, true);
         HttpServletResponse response = mock(HttpServletResponse.class);
 
         service.removeAuthCookie(response);

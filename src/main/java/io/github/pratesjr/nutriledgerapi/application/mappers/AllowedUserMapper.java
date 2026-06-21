@@ -11,7 +11,7 @@ public interface AllowedUserMapper {
     // AllowedUserDto -> AllowedUser (uses constructor for immutable model)
     default AllowedUser toModel(AllowedUserDto dto) {
         if (dto == null) return null;
-        return new AllowedUser(dto.getEmail());
+        return new AllowedUser(dto.email());
     }
 
     // AllowedUser -> AllowedUserDto

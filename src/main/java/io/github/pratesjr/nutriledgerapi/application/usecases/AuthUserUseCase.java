@@ -23,7 +23,7 @@ public class AuthUserUseCase implements AuthUserUseCasePort {
 
     @Override
     public AuthResultDto authenticate(OAuthUserDto oAuthUser) {
-        String email = oAuthUser.getEmail();
+        String email = oAuthUser.email();
         User user = this.userPersistence.findByEmail(email);
         if (user == null) {
             throw new UserNotFoundException(email);

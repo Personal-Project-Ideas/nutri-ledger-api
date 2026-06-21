@@ -26,16 +26,13 @@ class AllowedUserMapperTest {
         @Test
         @DisplayName("should return null when dto is null")
         void shouldReturnNullWhenDtoIsNull() {
-            AllowedUser model = mapper.toModel(null);
-
-            assertNull(model);
+            assertNull(mapper.toModel(null));
         }
 
         @Test
         @DisplayName("should map email from dto to model")
         void shouldMapEmailFromDtoToModel() {
-            AllowedUserDto dto = new AllowedUserDto();
-            dto.setEmail("user@example.com");
+            AllowedUserDto dto = new AllowedUserDto("user@example.com");
 
             AllowedUser model = mapper.toModel(dto);
 
@@ -50,9 +47,7 @@ class AllowedUserMapperTest {
         @Test
         @DisplayName("should return null when model is null")
         void shouldReturnNullWhenModelIsNull() {
-            AllowedUserDto dto = mapper.toDto(null);
-
-            assertNull(dto);
+            assertNull(mapper.toDto(null));
         }
 
         @Test
@@ -62,8 +57,7 @@ class AllowedUserMapperTest {
 
             AllowedUserDto dto = mapper.toDto(model);
 
-            assertEquals("admin@example.com", dto.getEmail());
+            assertEquals("admin@example.com", dto.email());
         }
     }
 }
-

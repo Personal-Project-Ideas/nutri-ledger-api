@@ -21,6 +21,7 @@ class UserMapperTest {
     void setUp() {
         mapper = Mappers.getMapper(UserMapper.class);
     }
+
     @Nested
     @DisplayName("toModel")
     class ToModel {
@@ -28,9 +29,7 @@ class UserMapperTest {
         @Test
         @DisplayName("should return null when dto is null")
         void shouldReturnNullWhenDtoIsNull() {
-            User model = mapper.toModel(null);
-
-            assertNull(model);
+            assertNull(mapper.toModel(null));
         }
 
         @Test
@@ -40,12 +39,8 @@ class UserMapperTest {
             Instant createdAt = Instant.now();
             Instant updatedAt = createdAt.plusSeconds(60);
 
-            UserResponseDto dto = new UserResponseDto();
-            dto.setId(id);
-            dto.setFullName("John Doe");
-            dto.setAge(30);
-            dto.setCreatedAt(createdAt.toString());
-            dto.setUpdatedAt(updatedAt.toString());
+            UserResponseDto dto = new UserResponseDto(id, "John Doe", 30,
+                    createdAt.toString(), updatedAt.toString());
 
             User model = mapper.toModel(dto);
 
@@ -63,12 +58,7 @@ class UserMapperTest {
         void shouldHandleNullDates() {
             UUID id = UUID.randomUUID();
 
-            UserResponseDto dto = new UserResponseDto();
-            dto.setId(id);
-            dto.setFullName("John Doe");
-            dto.setAge(30);
-            dto.setCreatedAt(null);
-            dto.setUpdatedAt(null);
+            UserResponseDto dto = new UserResponseDto(id, "John Doe", 30, null, null);
 
             User model = mapper.toModel(dto);
 
@@ -80,4 +70,3 @@ class UserMapperTest {
         }
     }
 }
-

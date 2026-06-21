@@ -7,18 +7,17 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface PortionMapper {
-    // PortionDto -> Portion
+
     default Portion toModel(PortionDto dto) {
-        if (dto == null) return null;
+        if (dto == null)
+            return null;
         return new Portion(
-            dto.getName(),
-            dto.getServingQuantity(),
-            dto.getServingUnit(),
-            dto.getCaloriesPerServing()
-        );
+                dto.name(),
+                dto.servingQuantity(),
+                dto.servingUnit(),
+                dto.caloriesPerServing());
     }
 
-    // Portion -> PortionDto
     @Mapping(source = "name", target = "name")
     @Mapping(source = "servingQuantity", target = "servingQuantity")
     @Mapping(source = "servingUnit", target = "servingUnit")

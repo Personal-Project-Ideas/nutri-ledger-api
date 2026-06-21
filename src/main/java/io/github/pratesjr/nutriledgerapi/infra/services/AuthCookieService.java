@@ -17,9 +17,14 @@ public class AuthCookieService implements AuthCookieServicePort {
     private static final String COOKIE_SAME_SITE = "Strict";
 
     private final boolean cookieSecure;
+    private final boolean cookieHttpOnly;
 
-    public AuthCookieService(@Value("${app.auth.cookie.secure}") boolean cookieSecure) {
+    public AuthCookieService(
+            @Value("${app.auth.cookie.secure}") boolean cookieSecure,
+            @Value("${app.auth.cookie.http-only:true}") boolean cookieHttpOnly
+    ) {
         this.cookieSecure = cookieSecure;
+        this.cookieHttpOnly = cookieHttpOnly;
     }
 
     @Override
@@ -36,7 +41,7 @@ public class AuthCookieService implements AuthCookieServicePort {
     private void writeAuthCookie(HttpServletResponse response, String value, int maxAge) {
         String safeValue = Objects.requireNonNull(value, "value");
         ResponseCookie cookie = ResponseCookie.from(AUTH_COOKIE_NAME, safeValue)
-                .httpOnly(true)
+                .httpOnly(cookieHttpOnly)
                 .secure(cookieSecure)
                 .path(COOKIE_PATH)
                 .maxAge(maxAge)

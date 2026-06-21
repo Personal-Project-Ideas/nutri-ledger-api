@@ -1,14 +1,17 @@
-mak.PHONY: run run-local test cucumber-test
+mak.PHONY: run run-local clean test cucumber-test
 
 # Spring test profile + H2 from .env (application-test.yaml imports optional:file:.env)
 TEST_MVN_ARGS := -Dspring.profiles.active=test
 TEST_ENV := SPRING_PROFILES_ACTIVE=test
 
+clean:
+	./mvnw clean
+
 run:
 	./mvnw spring-boot:run
 
 run-local:
-	SPRING_PROFILES_ACTIVE=local ./mvnw spring-boot:run
+	SPRING_PROFILES_ACTIVE=local ./mvnw clean spring-boot:run
 
 # Usage: make test | make test TEST_CLASS=JwtUtilTest
 test:

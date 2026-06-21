@@ -82,6 +82,7 @@ At minimum, define values used by `application.yaml` / profile files:
 - `GCLOUD_CLIENT_SECRET`
 - `GCLOUD_AUTH_URI`
 - `GCLOUD_TOKEN_URI`
+- `OAUTH2_REDIRECT_URI` (must match Google Console — see below)
 - `GOOGLE_PEOPLE_API_URL`
 - `POSTGRES_HOST`
 - `POSTGRES_PORT`
@@ -89,10 +90,47 @@ At minimum, define values used by `application.yaml` / profile files:
 - `POSTGRES_USER`
 - `POSTGRES_PASSWORD`
 
+### Google OAuth (fix `redirect_uri_mismatch`)
+
+Spring sends this **exact** redirect URI to Google (from `OAUTH2_REDIRECT_URI` in `.env`):
+
+```text
+http://localhost:{SERVER_PORT}{SERVER_CONTEXT_PATH}/login/oauth2/code/google
+```
+
+Example with defaults (`8080`, `/nutri-ledger/api`):
+
+```text
+http://localhost:8080/nutri-ledger/api/login/oauth2/code/google
+```
+
+**Important:** you do **not** open that URL yourself. It is not a page. Google calls it after you sign in (with `?code=...&state=...`). If you paste it in the browser alone, Spring redirects away and it looks “broken”.
+
+| URL | Who uses it |
+|-----|-------------|
+| `GET .../auth/google/signin` | **You** — start sign-in (browser) |
+| `GET .../auth/google/signup` | **You** — start sign-up (browser) |
+| `GET .../oauth2/authorization/google` | Spring internal redirect to Google (do not bookmark) |
+| `GET .../login/oauth2/code/google` | **Google only** — register in Console, never type in browser |
+
+In [Google Cloud Console](https://console.cloud.google.com/) → **APIs & Services** → **Credentials** → your **OAuth 2.0 Client ID** (Web application):
+
+1. **Authorized redirect URIs** → add the callback URI above (exact match, no trailing `/`).
+2. Do **not** put `/oauth2/authorization/google` in redirect URIs — that is the authorization start, not the callback.
+3. If `SERVER_CONTEXT_PATH` changes, update `.env` (`OAUTH2_REDIRECT_URI`) and Google Console.
+
+Start login in the browser:
+
+```text
+http://localhost:8080/nutri-ledger/api/auth/google/signin
+```
+
+(or `/auth/google/signup` for registration). After success you land on `APP_OAUTH_LOGIN_SUCCESS_URL` with `AUTH_TOKEN` set on `localhost:8080`.
+
 ### 2) Run the API
 
 ```bash
-mvn spring-boot:run
+make run-local
 ```
 
 ## Tests

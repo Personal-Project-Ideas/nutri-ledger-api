@@ -18,6 +18,7 @@ import io.github.pratesjr.nutriledgerapi.application.ports.CreateUserUseCasePort
 import io.github.pratesjr.nutriledgerapi.domain.errors.UserNotAllowedToBeCreatedException;
 import io.github.pratesjr.nutriledgerapi.domain.errors.UserNotFoundException;
 import io.github.pratesjr.nutriledgerapi.domain.models.AllowedUser;
+import io.github.pratesjr.nutriledgerapi.http.handlers.ApiErrorResponseWriter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -28,20 +29,20 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     private final AuthUserUseCasePort authUserUseCase;
     private final CreateUserUseCasePort createUserUseCase;
     private final AuthCookieServicePort authCookieService;
-    private final String loginSuccessRedirect;
+    private final ApiErrorResponseWriter apiErrorResponseWriter;
     private final String loginFailureRedirect;
 
     public OAuth2LoginSuccessHandler(
             AuthUserUseCasePort authUserUseCase,
             CreateUserUseCasePort createUserUseCase,
             AuthCookieServicePort authCookieService,
-            @Value("${app.oauth2.login-success-redirect}") String loginSuccessRedirect,
+            ApiErrorResponseWriter apiErrorResponseWriter,
             @Value("${app.oauth2.login-failure-redirect}") String loginFailureRedirect
     ) {
         this.authUserUseCase = authUserUseCase;
         this.createUserUseCase = createUserUseCase;
         this.authCookieService = authCookieService;
-        this.loginSuccessRedirect = loginSuccessRedirect;
+        this.apiErrorResponseWriter = apiErrorResponseWriter;
         this.loginFailureRedirect = loginFailureRedirect;
     }
 
@@ -63,22 +64,23 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         OAuthUserDto dto = principal.oauthUserDto();
         try {
-            issueCookieAndRedirect(response, dto);
+            issueAuthResponse(response, dto);
         } catch (UserNotFoundException e) {
             try {
-                AllowedUser allowed = new AllowedUser(dto.getEmail());
-                createUserUseCase.process(allowed, dto);
-                issueCookieAndRedirect(response, dto);
+                createUserUseCase.process(new AllowedUser(dto.email()), dto);
+                issueAuthResponse(response, dto);
             } catch (UserNotAllowedToBeCreatedException ex) {
-                sendRedirectFailure(response, "not_allowed");
+                apiErrorResponseWriter.write(request, response, UserNotAllowedToBeCreatedException.CODE);
             }
         }
     }
 
-    private void issueCookieAndRedirect(HttpServletResponse response, OAuthUserDto dto) throws IOException {
-        String token = authUserUseCase.authenticate(dto).getToken();
+    private void issueAuthResponse(HttpServletResponse response, OAuthUserDto dto) throws IOException {
+        String token = authUserUseCase.authenticate(dto).token();
         authCookieService.addAuthCookie(response, token);
-        response.sendRedirect(loginSuccessRedirect);
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"message\":\"Login successful\"}");
     }
 
     private void sendRedirectFailure(HttpServletResponse response, String reason) throws IOException {

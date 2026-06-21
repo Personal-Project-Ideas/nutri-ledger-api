@@ -10,12 +10,12 @@ public interface UserMapper {
     default User toModel(UserResponseDto dto) {
         if (dto == null) return null;
         return new User(
-            dto.getId(),
-            dto.getFullName(),
+            dto.id(),
+            dto.fullName(),
             null,
-            dto.getAge(),
-            dto.getCreatedAt() != null ? java.time.Instant.parse(dto.getCreatedAt()) : null,
-            dto.getUpdatedAt() != null ? java.time.Instant.parse(dto.getUpdatedAt()) : null
+            dto.age(),
+            dto.createdAt() != null ? java.time.Instant.parse(dto.createdAt()) : null,
+            dto.updatedAt() != null ? java.time.Instant.parse(dto.updatedAt()) : null
         );
     }
 }

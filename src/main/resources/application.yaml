@@ -20,6 +20,8 @@ spring:
           google:
             client-id: ${GCLOUD_CLIENT_ID}
             client-secret: ${GCLOUD_CLIENT_SECRET}
+            # Must match exactly one "Authorized redirect URI" in Google Cloud Console (see OAUTH2_REDIRECT_URI in .env).
+            redirect-uri: ${OAUTH2_REDIRECT_URI}
             scope:
               - email
               - profile

@@ -13,6 +13,7 @@ public final class ErrorCodes {
         put("http_401_002", new ErrorCode("http_401_002", 401, "Failed to generate authentication token"));
         put("http_403_001", new ErrorCode("http_403_001", 403, "You do not have permission to access this resource"));
         put("http_403_002", new ErrorCode("http_403_002", 403, "User is not allowed to be registered"));
+        put("http_403_003", new ErrorCode("http_403_003", 403, "User not found in the database"));
         put("http_404_001", new ErrorCode("http_404_001", 404, "Resource not found"));
         put("http_404_002", new ErrorCode("http_404_002", 404, "User not found in the database"));
         put("http_409_001", new ErrorCode("http_409_001", 409, "Resource conflict or already exists"));

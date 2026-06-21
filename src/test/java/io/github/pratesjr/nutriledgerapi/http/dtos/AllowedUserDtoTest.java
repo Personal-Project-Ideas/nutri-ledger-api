@@ -1,21 +1,21 @@
 package io.github.pratesjr.nutriledgerapi.http.dtos;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class AllowedUserDtoTest {
+
     @Test
-    void testGettersAndSetters() {
-        AllowedUserDto dto = new AllowedUserDto();
-        dto.setEmail("user@email.com");
-        assertEquals("user@email.com", dto.getEmail());
+    void testAccessor() {
+        AllowedUserDto dto = new AllowedUserDto("user@email.com");
+        assertEquals("user@email.com", dto.email());
     }
 
     @Test
-    void testSetters() {
-        AllowedUserDto dto = new AllowedUserDto();
-        dto.setEmail("another@email.com");
-        assertEquals("another@email.com", dto.getEmail());
+    void testEquality() {
+        AllowedUserDto first = new AllowedUserDto("user@email.com");
+        AllowedUserDto second = new AllowedUserDto("user@email.com");
+        assertEquals(first, second);
     }
 }
-

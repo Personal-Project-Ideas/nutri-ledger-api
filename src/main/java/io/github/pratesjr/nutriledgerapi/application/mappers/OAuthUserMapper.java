@@ -23,7 +23,7 @@ public class OAuthUserMapper {
         if (dto == null) {
             return new OAuthUser(null, null, null);
         }
-        return new OAuthUser(dto.getEmail(), dto.getFullName(), dto.getBirthdate());
+        return new OAuthUser(dto.email(), dto.fullName(), dto.birthdate());
     }
 
     public OAuthUserDto toDto(OAuthUser domain) {
