@@ -14,7 +14,7 @@ public class AuthCookieService implements AuthCookieServicePort {
     public static final String AUTH_COOKIE_NAME = "AUTH_TOKEN";
     private static final int COOKIE_MAX_AGE = 60 * 60 * 24; // 1 day
     private static final String COOKIE_PATH = "/";
-    private static final String COOKIE_SAME_SITE = "Strict";
+    private static final String COOKIE_SAME_SITE = "Lax";
 
     private final boolean cookieSecure;
     private final boolean cookieHttpOnly;
