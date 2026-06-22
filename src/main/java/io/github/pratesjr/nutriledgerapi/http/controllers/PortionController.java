@@ -1,7 +1,7 @@
 package io.github.pratesjr.nutriledgerapi.http.controllers;
 
-import io.github.pratesjr.nutriledgerapi.application.mappers.PortionModelMapper;
-import io.github.pratesjr.nutriledgerapi.application.mappers.PortionResponseDtoMapper;
+import io.github.pratesjr.nutriledgerapi.application.mappers.PortionMapper;
+import io.github.pratesjr.nutriledgerapi.application.mappers.ResponseMapper;
 import io.github.pratesjr.nutriledgerapi.application.ports.RegisterCaloriesByPortionUseCase;
 import io.github.pratesjr.nutriledgerapi.domain.models.Portion;
 import io.github.pratesjr.nutriledgerapi.http.dtos.PortionDto;
@@ -15,10 +15,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 
 @Tag(name = "Portions", description = "Portion management endpoints")
@@ -26,15 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/portions")
 public class PortionController {
 
-	private final PortionModelMapper portionModelMapper;
-	private final PortionResponseDtoMapper portionResponseDtoMapper;
+	private final PortionMapper portionMapper;
+	private final ResponseMapper responseMapper;
 	private final RegisterCaloriesByPortionUseCase registerCaloriesByPortionUseCase;
 
-	public PortionController(PortionModelMapper portionModelMapper,
-			PortionResponseDtoMapper portionResponseDtoMapper,
+	public PortionController(PortionMapper portionMapper, ResponseMapper responseMapper,
 			RegisterCaloriesByPortionUseCase registerCaloriesByPortionUseCase) {
-		this.portionModelMapper = portionModelMapper;
-		this.portionResponseDtoMapper = portionResponseDtoMapper;
+		this.portionMapper = portionMapper;
+		this.responseMapper = responseMapper;
 		this.registerCaloriesByPortionUseCase = registerCaloriesByPortionUseCase;
 	}
 
@@ -55,9 +50,9 @@ public class PortionController {
 	)
 	@PostMapping()
 	public ResponseEntity<PortionResponseDto> createPortion(@Valid @RequestBody PortionDto portionDto) {
-		Portion portion = portionModelMapper.toModel(portionDto);
+		Portion portion = portionMapper.toModel(portionDto);
 		Portion registeredPortion = registerCaloriesByPortionUseCase.process(portion);
-		PortionResponseDto response = portionResponseDtoMapper.toDto(registeredPortion);
+		PortionResponseDto response = responseMapper.toPortionResponseDto(registeredPortion);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}

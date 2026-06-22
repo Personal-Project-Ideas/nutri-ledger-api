@@ -1,133 +1,158 @@
 # Nutri Ledger API
 
-A RESTful API for tracking daily food intake and calorie consumption. This application helps users maintain a food diary by logging meals and monitoring their daily caloric intake.
+Simple backend API for nutrition tracking, with Google login and JWT-based session cookie.
 
-## 📋 About
+## What This Project Is
 
-Nutri Ledger API is a backend service that provides comprehensive functionality for managing daily food diaries. Users can track their meals, calculate calorie consumption, and monitor their nutritional intake over time. The application is built with a clean architecture approach, ensuring maintainability and scalability.
+This project is in an early stage.  
+Current focus is building a clean base architecture, authentication flow, and core endpoints.
 
-## 🛠️ Tech Stack
+## Main Technologies
 
-### Core Framework
-- **Java 21** - Latest LTS version with modern language features
-- **Spring Boot 4.0.3** - Application framework and dependency injection
-- **Maven** - Dependency management and build tool
+- Java 21
+- Spring Boot 3.3
+- Spring Web (REST APIs)
+- Spring Data JPA
+- Spring Security + OAuth2 (Google)
+- JWT (`jjwt`)
+- PostgreSQL (local/prod), H2 (tests)
+- MapStruct
+- Lombok
+- Maven
+- OpenAPI / Swagger UI
 
-### Main Dependencies
-- **Spring Web MVC** - RESTful API development
-- **Spring Data JPA** - Database access and ORM
-- **Lombok** - Reduces boilerplate code with annotations
-- **Spring Boot DevTools** - Hot reload and development utilities
+## Architecture (Simple View)
 
-### Architecture
-The project follows a layered architecture pattern:
-- **Domain Layer** - Core business logic and entities
-- **Application Layer** - Use cases and business orchestration
-- **Infrastructure Layer** - Database, repositories, and external integrations
-- **Entrypoint Layer** - REST controllers and API endpoints
+The code follows a ports-and-adapters style:
 
-## 🚀 Getting Started
+- `domain`: business models and domain errors
+- `application`: use cases, ports (interfaces), mappers
+- `infra`: persistence adapters, repositories, security/config implementations
+- `http`: controllers and DTOs
+
+Why this is useful:
+
+- business rules stay isolated from framework details
+- easier testing and refactoring
+- clearer responsibility per layer
+
+## Project Structure
+
+```text
+src/main/java/io/github/pratesjr/nutriledgerapi
+├── application
+│   ├── models
+│   ├── ports
+│   ├── usecases
+│   └── mappers
+├── domain
+│   ├── models
+│   └── errors
+├── infra
+│   ├── config
+│   ├── entities
+│   ├── persistences
+│   ├── repositories
+│   ├── security
+│   └── services
+└── http
+    ├── controllers
+    └── dtos
+```
+
+## Running Locally
 
 ### Prerequisites
-- Java 21 or higher
-- Maven 3.6+
 
-### Running the Application
+- Java 21+
+- Maven 3.9+
+- PostgreSQL
+
+### 1) Set environment variables
+
+At minimum, define values used by `application.yaml` / profile files:
+
+- `APP_NAME`
+- `SPRING_PROFILES_ACTIVE` (`local`, `test`, or `prod`)
+- `SERVER_PORT`
+- `SERVER_CONTEXT_PATH`
+- `JWT_SECRET`
+- `JWT_EXPIRATION`
+- `GCLOUD_CLIENT_ID`
+- `GCLOUD_CLIENT_SECRET`
+- `GCLOUD_AUTH_URI`
+- `GCLOUD_TOKEN_URI`
+- `OAUTH2_REDIRECT_URI` (must match Google Console — see below)
+- `GOOGLE_PEOPLE_API_URL`
+- `POSTGRES_HOST`
+- `POSTGRES_PORT`
+- `POSTGRES_DB`
+- `POSTGRES_USER`
+- `POSTGRES_PASSWORD`
+
+### Google OAuth (fix `redirect_uri_mismatch`)
+
+Spring sends this **exact** redirect URI to Google (from `OAUTH2_REDIRECT_URI` in `.env`):
+
+```text
+http://localhost:{SERVER_PORT}{SERVER_CONTEXT_PATH}/login/oauth2/code/google
+```
+
+Example with defaults (`8080`, `/nutri-ledger/api`):
+
+```text
+http://localhost:8080/nutri-ledger/api/login/oauth2/code/google
+```
+
+**Important:** you do **not** open that URL yourself. It is not a page. Google calls it after you sign in (with `?code=...&state=...`). If you paste it in the browser alone, Spring redirects away and it looks “broken”.
+
+| URL | Who uses it |
+|-----|-------------|
+| `GET .../auth/google/signin` | **You** — start sign-in (browser) |
+| `GET .../auth/google/signup` | **You** — start sign-up (browser) |
+| `GET .../oauth2/authorization/google` | Spring internal redirect to Google (do not bookmark) |
+| `GET .../login/oauth2/code/google` | **Google only** — register in Console, never type in browser |
+
+In [Google Cloud Console](https://console.cloud.google.com/) → **APIs & Services** → **Credentials** → your **OAuth 2.0 Client ID** (Web application):
+
+1. **Authorized redirect URIs** → add the callback URI above (exact match, no trailing `/`).
+2. Do **not** put `/oauth2/authorization/google` in redirect URIs — that is the authorization start, not the callback.
+3. If `SERVER_CONTEXT_PATH` changes, update `.env` (`OAUTH2_REDIRECT_URI`) and Google Console.
+
+Start login in the browser:
+
+```text
+http://localhost:8080/nutri-ledger/api/auth/google/signin
+```
+
+(or `/auth/google/signup` for registration). After success you land on `APP_OAUTH_LOGIN_SUCCESS_URL` with `AUTH_TOKEN` set on `localhost:8080`.
+
+### 2) Run the API
 
 ```bash
-# Clone the repository
-git clone <repository-url>
-
-# Navigate to the project directory
-cd nutri-ledger-api
-
-# Run the application
-./mvnw spring-boot:run
+make run-local
 ```
 
-The API will be available at `http://localhost:8080/nutri-ledger/api`
+## Tests
 
-Global route prefix configured in `application.yaml`:
-
-```yaml
-server:
-  servlet:
-    context-path: /nutri-ledger/api
-```
-
-Quick health-check example:
+Tests use the `test` profile with in-memory H2 (tables created from JPA entities via `ddl-auto: create-drop`). Copy `.env.example` to `.env` and set `TEST_DB_*`, JWT, OAuth, and related variables—tests read configuration from `.env`, not committed property files.
 
 ```bash
-curl http://localhost:8080/nutri-ledger/api/health
+make test
+# or a single class:
+make test TEST_CLASS=JwtUtilTest
 ```
 
-### Environment Variables
+Requires a `.env` with `TEST_DB_*`, JWT, OAuth, and related variables (see `.env.example`). `make test` forces the `test` profile so H2 settings from `.env` are used instead of local Postgres.
 
-For Spring profiles (`local`/`prod`), the application currently expects:
+## API Docs
 
-- `DB_URL`
-- `DB_USERNAME`
-- `DB_PASSWORD`
+When running locally, Swagger is available at:
 
-For Docker infrastructure, `.env` also includes Redis variables:
+- `/swagger-ui.html` (or `/swagger-ui/index.html`)
 
-- `REDIS_HOST`
-- `REDIS_PORT`
-- `REDIS_PASSWORD`
+## Current Status
 
-A template is available in `.env.example`.
-
-### Docker Infrastructure (PostgreSQL + Redis)
-
-```bash
-cp .env.example .env
-docker compose up -d postgres redis
-```
-
-To stop containers:
-
-```bash
-docker compose down
-```
-
-### Running with Profiles
-
-```bash
-# Local profile (PostgreSQL values from env)
-SPRING_PROFILES_ACTIVE=local ./mvnw spring-boot:run
-
-# Production profile (reads DB_* env vars)
-SPRING_PROFILES_ACTIVE=prod ./mvnw spring-boot:run
-```
-
-## 📁 Project Structure
-
-```
-src/main/java/io/github/pratesjr/nutriledgerapi/
-├── application/         # Application layer
-│   └── usecases/       # Business use cases
-├── domain/             # Domain models and business logic
-├── entrypoint/         # REST controllers and API endpoints
-└── infra/              # Infrastructure layer
-    ├── config/         # Configuration classes
-    ├── database/       # Database configurations
-    ├── entities/       # JPA entities
-    ├── persistence/    # Persistence adapters
-    └── repositories/   # Spring Data repositories
-```
-
-## 🔧 Configuration
-
-Application configuration can be found in `src/main/resources/application.yaml`
-
-## 📚 API Documentation
-
-(Coming soon - API documentation will be added)
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📝 License
-
-This project is licensed under the terms specified in the project configuration.
+- Core structure is ready
+- Authentication flow is being implemented
+- Business features are still being expanded

@@ -1,0 +1,49 @@
+{
+  "properties": [
+    {
+      "name": "app.oauth2.login-success-redirect",
+      "type": "java.lang.String",
+      "description": "Frontend URL to redirect the browser to after OAuth login success."
+    },
+    {
+      "name": "app.oauth2.login-failure-redirect",
+      "type": "java.lang.String",
+      "description": "Frontend URL to redirect the browser to after OAuth login failure."
+    },
+    {
+      "name": "app.auth.cookie.secure",
+      "type": "java.lang.Boolean",
+      "description": "Whether AUTH_TOKEN cookie should include the Secure attribute."
+    },
+    {
+      "name": "app.auth.cookie.http-only",
+      "type": "java.lang.Boolean",
+      "description": "Whether AUTH_TOKEN cookie should include the HttpOnly attribute. Disable locally to inspect the cookie value."
+    },
+    {
+      "name": "app.cors.allowed-origins",
+      "type": "java.lang.String",
+      "description": "Comma-separated list of allowed CORS origins for credentialed browser requests."
+    },
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "description": "Secret key used to sign JWT tokens."
+    },
+    {
+      "name": "OAUTH2_REDIRECT_URI",
+      "type": "java.lang.String",
+      "description": "OAuth2 redirect URI registered in Google Cloud Console (must match exactly)."
+    },
+    {
+      "name": "jwt.expiration",
+      "type": "java.lang.Long",
+      "description": "JWT expiration time in seconds."
+    },
+    {
+      "name": "spring.jpa.hibernate.ddl-auto",
+      "type": "java.lang.String",
+      "description": "Hibernate DDL strategy (create-drop used in test profile with H2)."
+    }
+  ]
+}

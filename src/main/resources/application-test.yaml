@@ -1,20 +1,21 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
   datasource:
-    url: jdbc:postgresql://localhost:5434/nutri_ledger_pg
-    username: test_user
-    password: test_pass
-    driver-class-name: org.postgresql.Driver
-    hikari:
-      pool-name: test_pool
-      minimum-idle: 1
-      maximum-pool-size: 2
-      idle-timeout: 10000
-      max-lifetime: 30000
-      connection-timeout: 5000
+    url: ${TEST_DB_URL}
+    username: ${TEST_DB_USERNAME}
+    password: ${TEST_DB_PASSWORD}
+    driver-class-name: org.h2.Driver
+  cache:
+    type: ${TEST_CACHE_TYPE:none}
   jpa:
     hibernate:
-      ddl-auto: none
-    show-sql: true
+      ddl-auto: create-drop
+    show-sql: false
+    defer-datasource-initialization: true
     properties:
       hibernate:
-        format_sql: true
+        '[format_sql]': true
+        '[physical_naming_strategy]': org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+        '[default_schema]': nutri_ledger
+        '[hbm2ddl.create_namespaces]': true

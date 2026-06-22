@@ -1,4 +1,7 @@
 spring:
+  config:
+    # Local runs: load variables from the project .env file (test profile imports .env separately).
+    import: optional:file:.env[.properties]
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
     username: ${POSTGRES_USER}
@@ -14,7 +17,35 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: off
+    show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        '[format_sql]': true
+        '[physical_naming_strategy]': org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GCLOUD_CLIENT_ID}
+            client-secret: ${GCLOUD_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+        provider:
+          google:
+            authorization-uri: ${GCLOUD_AUTH_URI}
+            token-uri: ${GCLOUD_TOKEN_URI}
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+            user-name-attribute: sub
+
+app:
+  auth:
+    cookie:
+      secure: ${APP_AUTH_COOKIE_SECURE}
+      http-only: false
+  cors:
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS}
+
