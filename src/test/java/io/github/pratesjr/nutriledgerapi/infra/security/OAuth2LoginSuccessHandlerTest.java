@@ -12,6 +12,8 @@ import io.github.pratesjr.nutriledgerapi.http.dtos.AuthResultDto;
 import io.github.pratesjr.nutriledgerapi.http.handlers.ApiErrorResponseWriter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -21,9 +23,6 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -32,8 +31,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class OAuth2LoginSuccessHandlerTest {
 
-    private static final String FAILURE_URL = "http://localhost:3000/login";
-
     @Mock private AuthUserUseCasePort authUserUseCase;
     @Mock private CreateUserUseCasePort createUserUseCase;
     @Mock private AuthCookieServicePort authCookieService;
@@ -41,7 +38,7 @@ class OAuth2LoginSuccessHandlerTest {
     @Test
     void shouldSetCookieAndReturn200WhenUserExists() throws Exception {
         OAuthUserDto dto = new OAuthUserDto("user@example.com", "User", null);
-        HttpServletResponse response = mockResponseWithWriter();
+        HttpServletResponse response = mockResponse();
 
         when(authUserUseCase.authenticate(dto)).thenReturn(new AuthResultDto("jwt-token"));
 
@@ -54,7 +51,7 @@ class OAuth2LoginSuccessHandlerTest {
     @Test
     void shouldAutoCreateUserAndReturn200WhenUserNotFound() throws Exception {
         OAuthUserDto dto = new OAuthUserDto("new@example.com", "New User", null);
-        HttpServletResponse response = mockResponseWithWriter();
+        HttpServletResponse response = mockResponse();
 
         when(authUserUseCase.authenticate(dto))
                 .thenThrow(new UserNotFoundException("new@example.com"))
@@ -74,7 +71,7 @@ class OAuth2LoginSuccessHandlerTest {
     void shouldReturnErrorWhenUserNotAllowed() throws Exception {
         OAuthUserDto dto = new OAuthUserDto("blocked@example.com", "Blocked", null);
         HttpServletRequest request = mock(HttpServletRequest.class);
-        HttpServletResponse response = mockResponseWithWriter();
+        HttpServletResponse response = mockResponse();
 
         when(authUserUseCase.authenticate(dto)).thenThrow(new UserNotFoundException("blocked@example.com"));
         when(createUserUseCase.process(any(AllowedUser.class), eq(dto)))
@@ -90,8 +87,7 @@ class OAuth2LoginSuccessHandlerTest {
                 authUserUseCase,
                 createUserUseCase,
                 authCookieService,
-                new ApiErrorResponseWriter(new ObjectMapper()),
-                FAILURE_URL
+                new ApiErrorResponseWriter(new ObjectMapper())
         );
     }
 
@@ -102,7 +98,7 @@ class OAuth2LoginSuccessHandlerTest {
         return new OAuth2AuthenticationToken(principal, principal.getAuthorities(), "google");
     }
 
-    private HttpServletResponse mockResponseWithWriter() throws Exception {
+    private HttpServletResponse mockResponse() throws Exception {
         HttpServletResponse response = mock(HttpServletResponse.class);
         when(response.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
         return response;
